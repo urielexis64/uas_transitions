@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// List of available transition animations
 enum UasAnimation {
   native,
   fadeIn,
@@ -20,6 +21,7 @@ enum UasAnimation {
   rotateFromBottomRight,
 }
 
+/// List of screen sides
 enum UasSide {
   topLeft,
   topCenter,
@@ -32,6 +34,13 @@ enum UasSide {
   bottomRight
 }
 
+/// Animate your screen transitions with this widget!
+/// [animation] is the type of animation you can use.
+/// [context] is the context of the screen you want to animate.
+/// [duration] is the duration of the animation.
+/// [replacement] put true if you want to replace the screen with the new one.
+/// [curves] is the curve of the animation.
+/// [child] is the widget of the end screen.
 class UasTransition {
   final UasAnimation animation;
   final BuildContext context;
@@ -43,9 +52,9 @@ class UasTransition {
   UasTransition(
       {required this.context,
       required this.child,
-      this.duration = const Duration(milliseconds: 500),
-      this.animation = UasAnimation.scaleUp,
-      this.curves = Curves.elasticOut,
+      this.duration = const Duration(milliseconds: 400),
+      this.animation = UasAnimation.native,
+      this.curves = Curves.easeOut,
       this.replacement = false}) {
     switch (animation) {
       case UasAnimation.native:
@@ -102,15 +111,21 @@ class UasTransition {
     }
   }
 
+  /// Shortcut to create push navigation.
   void _naviPush(Route route) => Navigator.push(context, route);
 
+  /// Shortcut to create push replacement navigation.
   void _naviPushRep(Route route) => Navigator.pushReplacement(context, route);
 
+  /// Create native transition:
+  /// • Android: FadeInUp
+  /// • iOS: SlideFromRightToLeft
   void _nativeTransition() {
     final route = MaterialPageRoute(builder: (_) => child);
     return replacement ? _naviPushRep(route) : _naviPush(route);
   }
 
+  /// Create fade in transition.
   void _fadeInTransition() {
     final route = PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => child,
@@ -122,6 +137,7 @@ class UasTransition {
     return replacement ? _naviPushRep(route) : _naviPush(route);
   }
 
+  /// Create scale up transition.
   void _scaleUpTransition() {
     final route = PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => child,
@@ -138,6 +154,7 @@ class UasTransition {
     return replacement ? _naviPushRep(route) : _naviPush(route);
   }
 
+  /// Create rotate transition from [side].
   void _rotateFromTransition(UasSide side) {
     Alignment alignment;
     switch (side) {
@@ -186,6 +203,7 @@ class UasTransition {
     return replacement ? _naviPushRep(route) : _naviPush(route);
   }
 
+  /// Create scaled-rotated-faded transition.
   void _rotateUpTransition() {
     final route = PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => child,
@@ -206,6 +224,7 @@ class UasTransition {
     return replacement ? _naviPushRep(route) : _naviPush(route);
   }
 
+  /// Create slide transition from [originSide].
   void _slideTransition(UasSide originSide) {
     final dx = originSide == UasSide.centerLeft
         ? -1.0

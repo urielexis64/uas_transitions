@@ -16,10 +16,9 @@ class Page1Page extends StatelessWidget {
           child: MaterialButton(
             onPressed: () {
               UasTransition(
-                  context: context,
-                  child: Page2Page(),
-                  animation: UasAnimation.rotateFromBottomRight,
-                  curves: Curves.ease);
+                context: context,
+                child: Page2Page(),
+              );
             },
             child: Text('Go to Page2'),
             color: Colors.white,
